@@ -1,0 +1,262 @@
+{
+  "approved": false,
+  "language": "id",
+  "profile": "umum",
+  "zones": [
+    {
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "latitude": null,
+      "longitude": null,
+      "radiusMeters": null
+    }
+  ],
+  "pois": [
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000001",
+      "idQuest": "40000000-0000-4000-8000-000000000001",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    },
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000002",
+      "idQuest": "40000000-0000-4000-8000-000000000002",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    },
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000003",
+      "idQuest": "40000000-0000-4000-8000-000000000003",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    },
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000004",
+      "idQuest": "40000000-0000-4000-8000-000000000004",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    },
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000005",
+      "idQuest": "40000000-0000-4000-8000-000000000005",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    },
+    {
+      "idPoi": "30000000-0000-4000-8000-000000000006",
+      "idQuest": "40000000-0000-4000-8000-000000000006",
+      "idZona": "20000000-0000-4000-8000-000000000001",
+      "name": null,
+      "photoPath": null,
+      "denahX": null,
+      "denahY": null,
+      "priority": null,
+      "estimatedMinutes": null,
+      "description": null,
+      "audioPath": null,
+      "audioDurationSeconds": null,
+      "question": {
+        "instruction": null,
+        "prompt": null,
+        "hint": null,
+        "options": [
+          {
+            "label": "A",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "B",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "C",
+            "text": null,
+            "correct": null
+          },
+          {
+            "label": "D",
+            "text": null,
+            "correct": null
+          }
+        ]
+      }
+    }
+  ]
+}

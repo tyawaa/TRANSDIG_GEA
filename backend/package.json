@@ -1,0 +1,28 @@
+{
+  "name": "gea-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Supabase backend untuk GEA Stories dan geofence museum",
+  "scripts": {
+    "check": "deno check --config deno.json supabase/functions/gea-api/index.ts tests/backend.test.ts scripts/*.ts",
+    "lint": "deno lint",
+    "format": "deno fmt",
+    "test": "deno test --allow-read --allow-env --allow-net tests",
+    "start": "supabase start",
+    "serve": "supabase functions serve gea-api --env-file .env",
+    "db:reset": "supabase db reset",
+    "deploy:function": "supabase functions deploy gea-api --use-api",
+    "db:push": "supabase db push --remote",
+    "seed:prepare": "deno run --allow-read --allow-write scripts/prepare-seed.ts",
+    "qr:create": "deno run --allow-write scripts/create-qr.ts",
+    "demo:geofence": "deno run scripts/demo-geofence.ts",
+    "smoke": "deno run --allow-env --allow-net scripts/smoke.ts"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.14",
+    "@types/node": "26.6.6",
+    "deno": "2.9.6",
+    "supabase": "3.0.0"
+  }
+}

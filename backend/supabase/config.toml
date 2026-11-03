@@ -1,0 +1,31 @@
+project_id = "gea"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:8081"
+enable_anonymous_sign_ins = true
+
+[functions.gea-api]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/gea-api/index.ts"
+# Handler memvalidasi bearer token melalui Auth /user, termasuk JWT signing keys baru.
