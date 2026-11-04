@@ -47,6 +47,99 @@ export const poiSchema = z.object({
 export const poiListSchema = z.array(poiSchema);
 export type PoiSummary = z.infer<typeof poiSchema>;
 
+export const languageSchema = z.enum(["id", "en"]);
+export type Language = z.infer<typeof languageSchema>;
+export const profileSchema = z.enum(["umum", "pelajar"]);
+export type Profile = z.infer<typeof profileSchema>;
+export const optionLabelSchema = z.enum(["A", "B", "C", "D"]);
+export type OptionLabel = z.infer<typeof optionLabelSchema>;
+
+// Bentuk respons GET /pois/{id}. Kunci jawaban dan hint sengaja tidak ada di sini.
+export const descriptionCardSchema = z.object({
+  type: z.literal("description"),
+  text: z.string().min(1),
+  photoUrl: z.url(),
+});
+export const audioCardSchema = z.object({
+  type: z.literal("audio"),
+  audioUrl: z.url(),
+  durationSeconds: z.number().int().min(30).max(90),
+});
+export const questOptionSchema = z.object({
+  label_opsi: optionLabelSchema,
+  teks_opsi: z.string().min(1),
+});
+export const questSchema = z.object({
+  idQuest: z.uuid(),
+  type: z.literal("pilgan"),
+  instruksi: z.string().min(1),
+  pertanyaan: z.string().min(1),
+  options: z.array(questOptionSchema).length(4),
+});
+export const poiDetailSchema = z.object({
+  id_poi: z.uuid(),
+  id_zona: z.uuid(),
+  nama: z.string().min(1),
+  path_foto: z.string().min(1),
+  denah_x: z.number(),
+  denah_y: z.number(),
+  prioritas: z.number().int(),
+  estimasi_durasi: z.number().int().positive(),
+  language: languageSchema,
+  profile: profileSchema,
+  cards: z.tuple([descriptionCardSchema, audioCardSchema]),
+  quest: questSchema,
+});
+export type DescriptionCard = z.infer<typeof descriptionCardSchema>;
+export type AudioCard = z.infer<typeof audioCardSchema>;
+export type QuestOption = z.infer<typeof questOptionSchema>;
+export type Quest = z.infer<typeof questSchema>;
+export type PoiDetail = z.infer<typeof poiDetailSchema>;
+
+// POST /sessions/{id}/verify-qr
+export const poiVerificationSchema = z.object({
+  idPoi: z.uuid(),
+  verified: z.literal(true),
+  expiresAt: z.string().min(1),
+  poi: poiDetailSchema,
+});
+export type PoiVerification = z.infer<typeof poiVerificationSchema>;
+
+// POST /sessions/{id}/quests/{questId}/answers
+export const answerResultSchema = z.object({
+  idQuest: z.uuid(),
+  idPoi: z.uuid(),
+  answerCorrect: z.boolean(),
+  attemptCount: z.number().int().positive(),
+  completed: z.boolean(),
+  hint: z.string().nullable(),
+});
+export type AnswerResult = z.infer<typeof answerResultSchema>;
+
+// POST /sessions/{id}/pois/{poiId}/close
+export const closedCardSchema = z.object({
+  idPoi: z.uuid(),
+  statusKartu: z.literal("ditutup"),
+});
+export type ClosedCard = z.infer<typeof closedCardSchema>;
+
+// GET /sessions/{id}/progress: baris tabel menampilkan_kartu dan mengerjakan milik sesi.
+export const visitProgressSchema = z.object({
+  session: visitSchema,
+  cards: z.array(z.object({
+    id_poi: z.uuid(),
+    status_kartu: z.enum(["sedang_tampil", "ditutup"]),
+    waktu_ditutup: z.string().nullable(),
+  })),
+  quests: z.array(z.object({
+    id_quest: z.uuid(),
+    jumlah_percobaan: z.number().int().positive(),
+    hint_dipakai: z.boolean(),
+    answer_correct: z.boolean(),
+  })),
+});
+export type VisitProgress = z.infer<typeof visitProgressSchema>;
+
 export type DecisionMessage = {
   readonly title: string;
   readonly description: string;

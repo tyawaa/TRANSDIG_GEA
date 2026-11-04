@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { PoiSummary, Visit } from "../../domain/contracts";
 import type { RunOperation } from "../../hooks/useOperation";
-import { GeaApi } from "../../services/api";
+import type { StoriesSource } from "../../services/stories";
 
 type PoisState = {
   readonly pois: readonly PoiSummary[] | null;
@@ -9,7 +9,11 @@ type PoisState = {
   readonly closeStories: () => void;
 };
 
-export function usePois(api: GeaApi, runOperation: RunOperation): PoisState {
+/** Sumber daftar POI: backend (ApiStoriesSource) atau data dummy (MockStoriesSource). */
+export function usePois(
+  source: Pick<StoriesSource, "pois">,
+  runOperation: RunOperation,
+): PoisState {
   const [pois, setPois] = useState<readonly PoiSummary[] | null>(null);
   async function openStories(visit: Visit | null): Promise<void> {
     if (visit === null) {
@@ -18,7 +22,7 @@ export function usePois(api: GeaApi, runOperation: RunOperation): PoisState {
       );
     }
     await runOperation("stories", async (): Promise<void> => {
-      setPois(await api.pois());
+      setPois(await source.pois());
     });
   }
   function closeStories(): void {

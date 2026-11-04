@@ -1,15 +1,18 @@
 import type { ReactElement } from "react";
 import { Pressable, Text, View } from "react-native";
 import type { PoiSummary } from "../../domain/contracts";
+import { emptyProgress, type PoiProgress } from "../../screens/PoiDetailScreen";
 import { styles } from "../../theme/styles";
 import { PoiCard } from "./PoiCard";
 
 type PoiListScreenProps = {
   readonly pois: readonly PoiSummary[];
+  readonly progress: { readonly [poiId: string]: PoiProgress };
+  readonly onOpen: (poiId: string) => void;
   readonly onBack: () => void;
 };
 export function PoiListScreen(
-  { pois, onBack }: PoiListScreenProps,
+  { pois, progress, onOpen, onBack }: PoiListScreenProps,
 ): ReactElement {
   return (
     <View style={styles.stories}>
@@ -36,7 +39,12 @@ export function PoiListScreen(
         </View>
       )}
       {pois.map((poi: PoiSummary): ReactElement => (
-        <PoiCard key={poi.id_poi} poi={poi} />
+        <PoiCard
+          key={poi.id_poi}
+          poi={poi}
+          progress={progress[poi.id_poi] ?? emptyProgress}
+          onPress={(): void => onOpen(poi.id_poi)}
+        />
       ))}
     </View>
   );

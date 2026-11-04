@@ -33,7 +33,11 @@
           "recordAudioAndroid": false,
           "microphonePermission": false
         }
-      ]
+      ],
+      "expo-audio",
+      "expo-asset",
+      "expo-image",
+      "expo-font"
     ],
     "web": {
       "favicon": "./assets/favicon.png"

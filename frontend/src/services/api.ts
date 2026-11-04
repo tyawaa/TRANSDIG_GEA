@@ -3,11 +3,24 @@ import { z } from "zod";
 import {
   type AccessDecision,
   accessDecisionSchema,
+  type AnswerResult,
+  answerResultSchema,
   type BackendHealth,
+  type ClosedCard,
+  closedCardSchema,
   type DeviceLocation,
   healthSchema,
+  type Language,
+  type OptionLabel,
+  type PoiDetail,
+  poiDetailSchema,
   poiListSchema,
   type PoiSummary,
+  type PoiVerification,
+  poiVerificationSchema,
+  type Profile,
+  type VisitProgress,
+  visitProgressSchema,
   type Visit,
   visitSchema,
 } from "../domain/contracts";
@@ -165,9 +178,74 @@ export class GeaApi {
   }
 
   async pois(): Promise<readonly PoiSummary[]> {
+    return poiListSchema.parse(await this.get("/pois"));
+  }
+
+  // --- Modul Stories (E7) -------------------------------------------------
+
+  async poiDetail(
+    idPoi: string,
+    language: Language,
+    profile: Profile,
+  ): Promise<PoiDetail> {
+    const query: URLSearchParams = new URLSearchParams({ language, profile });
+    return poiDetailSchema.parse(
+      await this.get(`/pois/${encodeURIComponent(idPoi)}?${query.toString()}`),
+    );
+  }
+
+  async verifyPoiQr(
+    idSesi: string,
+    token: string,
+    language: Language,
+    profile: Profile,
+  ): Promise<PoiVerification> {
+    return poiVerificationSchema.parse(
+      await this.post(`/sessions/${encodeURIComponent(idSesi)}/verify-qr`, {
+        token,
+        language,
+        profile,
+      }),
+    );
+  }
+
+  async answerQuest(
+    idSesi: string,
+    idQuest: string,
+    requestId: string,
+    labelOpsi: OptionLabel,
+  ): Promise<AnswerResult> {
+    return answerResultSchema.parse(
+      await this.post(
+        `/sessions/${encodeURIComponent(idSesi)}/quests/${
+          encodeURIComponent(idQuest)
+        }/answers`,
+        { requestId, labelOpsi },
+      ),
+    );
+  }
+
+  async closeCard(idSesi: string, idPoi: string): Promise<ClosedCard> {
+    return closedCardSchema.parse(
+      await this.post(
+        `/sessions/${encodeURIComponent(idSesi)}/pois/${
+          encodeURIComponent(idPoi)
+        }/close`,
+        {},
+      ),
+    );
+  }
+
+  async progress(idSesi: string): Promise<VisitProgress> {
+    return visitProgressSchema.parse(
+      await this.get(`/sessions/${encodeURIComponent(idSesi)}/progress`),
+    );
+  }
+
+  private async get(path: string): Promise<unknown> {
     const headers: Headers = await this.authorizedHeaders();
-    return poiListSchema.parse(
-      await responseData(new Request(`${this.baseUrl()}/pois`, { headers })),
+    return await responseData(
+      new Request(`${this.baseUrl()}${path}`, { headers }),
     );
   }
 
@@ -230,6 +308,15 @@ export function readableError(error: unknown): string {
     }
     if (error.code === "ENTRANCE_QR_INVALID") {
       return "QR ini bukan QR pintu masuk yang aktif. Minta QR terbaru dari petugas.";
+    }
+    if (error.code === "POI_QR_INVALID") {
+      return "QR ini bukan QR koleksi yang aktif. Scan QR di dekat koleksi.";
+    }
+    if (error.code === "CHECKPOINT_VERIFICATION_REQUIRED") {
+      return "Scan QR koleksi dulu sebelum menjawab. Verifikasi berlaku 15 menit.";
+    }
+    if (error.code === "QUEST_ALREADY_COMPLETED") {
+      return "Quest ini sudah selesai dijawab dengan benar.";
     }
     if (error.code === "MUSEUM_AREA_NOT_CONFIGURED") {
       return "Pengecekan area museum belum tersedia. Gunakan QR pintu masuk.";

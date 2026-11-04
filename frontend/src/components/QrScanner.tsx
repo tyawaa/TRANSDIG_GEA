@@ -17,9 +17,19 @@ import { readableError } from "../services/api";
 type ScannerProps = {
   readonly onToken: (token: string) => void;
   readonly onClose: () => void;
+  readonly eyebrow?: string;
+  readonly title?: string;
+  readonly description?: string;
 };
 
-export function QrScanner({ onToken, onClose }: ScannerProps): ReactElement {
+export function QrScanner({
+  onToken,
+  onClose,
+  eyebrow = "MULAI KUNJUNGAN",
+  title = "Scan QR pintu masuk",
+  description =
+    "Gunakan kode yang tersedia di pintu masuk museum. Kode akan diperiksa sebelum kunjungan dibuka.",
+}: ScannerProps): ReactElement {
   const [permission, requestPermission] = useCameraPermissions();
   const [error, setError] = useState<string | null>(null);
   const scanned = useRef<boolean>(false);
@@ -45,7 +55,7 @@ export function QrScanner({ onToken, onClose }: ScannerProps): ReactElement {
     if (scanned.current) return;
     if (!/^[0-9a-f]{64}$/.test(result.data)) {
       setError(
-        "QR ini bukan kode GEA. Arahkan kamera ke QR pintu masuk dari petugas museum.",
+        "QR ini bukan kode GEA. Arahkan kamera ke QR resmi dari museum.",
       );
       return;
     }
@@ -55,12 +65,9 @@ export function QrScanner({ onToken, onClose }: ScannerProps): ReactElement {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.eyebrow}>MULAI KUNJUNGAN</Text>
-      <Text style={styles.title}>Scan QR pintu masuk</Text>
-      <Text style={styles.description}>
-        Gunakan kode yang tersedia di pintu masuk museum. Kode akan diperiksa
-        sebelum kunjungan dibuka.
-      </Text>
+      <Text style={styles.eyebrow}>{eyebrow}</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
       {permission === null
         ? <ActivityIndicator color="#147C70" />
         : permission.granted
