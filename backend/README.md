@@ -254,54 +254,6 @@ foto/narasi museum yang disetujui, maksimal 10 MiB per file; bukan untuk foto pe
 mengunggah media; client tidak memiliki izin upload. Sebelum menyebut B3 selesai, periksa seluruh
 URL media dan cocokkan durasi file sebenarnya, bukan hanya metadata JSON.
 
-## A2/A6: arsitektur dan ERD
-
-Brief awal menggunakan dataset/aset dan progres lokal. Kebutuhan sprint menambahkan sumber data
-pusat dan penyimpanan jawaban backend. Backend saat ini memakai cloud sebagai sumber kebenaran;
-sinkronisasi offline belum dibuat. Keputusan ini perlu dicatat PM sebagai perubahan dari baseline
-lokal, termasuk konsekuensi API memerlukan jaringan.
-
-```mermaid
-flowchart TD
-  App[Expo React Native - landing awal] --> GPS[Expo Location - pembacaan foreground]
-  GPS -->|koordinat dan akurasi| App
-  QR[QR museum yang diterbitkan admin] -->|Expo Camera - scanner pintu masuk| App
-  App -->|login anonim dan refresh token| Auth[Supabase Auth]
-  App -->|HTTPS dan bearer token| API[Edge Function gea-api]
-  API -->|validasi token| Auth
-  API --> Geo[Haversine dan aturan akses]
-  Config[Secret pusat dan radius - menunggu PM] --> Geo
-  API -->|RPC atomik dan query| DB[(PostgreSQL dengan RLS)]
-  DB --> QRTokens[Hash QR dan verifikasi checkpoint privat]
-  API -->|data Stories dan URL media| App
-  App -->|unduh foto dan narasi| Storage[Supabase Storage gea-media]
-```
-
-```mermaid
-erDiagram
-  zona ||--o{ zona_keyword : memiliki
-  zona ||--o{ poi : menaungi
-  zona ||--o{ sesi_kunjungan : lokasi_awal
-  poi ||--o{ poi_keyword : memiliki
-  poi ||--o{ konten : bahasa_profil
-  poi ||--o| quest : memiliki
-  poi ||--o{ memiliki_jarak : asal
-  poi ||--o{ memiliki_jarak : tujuan
-  quest ||--o{ quest_teks : bahasa_profil
-  quest ||--o{ quest_opsi : opsi
-  quest_opsi ||--o{ quest_opsi_text : bahasa
-  sesi_kunjungan ||--o{ menampilkan_kartu : status
-  poi ||--o{ menampilkan_kartu : kartu
-  sesi_kunjungan ||--o{ mengerjakan : progres
-  quest ||--o{ mengerjakan : hasil
-```
-
-Definisi kolom/tipe/PK/FK ada di migrasi SQL sebagai sumber utama. Penambahan terhadap ERD gambar:
-pemilik sesi (`user_id`), lifecycle sesi, metode verifikasi, draft/published POI, opsi jawaban
-terakhir, serta tabel privat untuk token, receipt, dan idempotensi. Dua kartu UI diproyeksikan dari
-satu baris `konten`. Publish guard memeriksa kelengkapan paket ketika POI diterbitkan; setelah
-published, perubahan konten dilakukan dengan men-draft-kan POI dahulu, mengubah seluruh paket dalam
-transaksi, lalu menerbitkan ulang.
 
 ## Handoff dan batas selesai
 
