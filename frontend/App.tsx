@@ -57,6 +57,8 @@ function Home(): ReactElement {
     visit,
     scannerOpen,
     connection,
+    locationLabel,
+    locationSettingsAction,
     openScanner,
     closeScanner,
     checkConnection,
@@ -130,6 +132,8 @@ function Home(): ReactElement {
                 decision={decision}
                 error={error}
                 connection={connection}
+                locationLabel={locationLabel}
+                locationSettingsAction={locationSettingsAction}
                 onPrimary={(): void => {
                   void (activeVisit === null
                     ? checkLocation()
