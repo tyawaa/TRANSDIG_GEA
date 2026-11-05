@@ -1,9 +1,16 @@
 import { ValidationError } from "./errors.ts";
+import { parsePolygon, pointInPolygon } from "./polygon.ts";
 import { finiteNumber, type JsonObject, object } from "./validation.ts";
 
 export type Coordinate = { readonly latitude: number; readonly longitude: number };
 export type Location = Coordinate & { readonly accuracyMeters: number };
-export type MuseumArea = Coordinate & { readonly radiusMeters: number; readonly zoneId: string };
+export type MuseumArea =
+  & Coordinate
+  & { readonly zoneId: string }
+  & (
+    | { readonly radiusMeters: number; readonly polygon?: never }
+    | { readonly polygon: readonly Coordinate[]; readonly radiusMeters?: never }
+  );
 export type AccessStatus =
   | "inside"
   | "outside"
@@ -71,7 +78,12 @@ export function evaluateGeofence(
     };
   }
   validateCoordinate(area);
-  if (!Number.isFinite(area.radiusMeters) || area.radiusMeters <= 0) {
+  const polygon = area.polygon === undefined ? null : parsePolygon(area.polygon);
+  if (
+    polygon === null &&
+    (typeof area.radiusMeters !== "number" || !Number.isFinite(area.radiusMeters) ||
+      area.radiusMeters <= 0)
+  ) {
     throw new ValidationError("radiusMeters museum harus positif dan finite.");
   }
   if (validated === null) {
@@ -95,7 +107,10 @@ export function evaluateGeofence(
       reasonCode: "GPS_ACCURACY_EXCEEDS_20_METERS",
     };
   }
-  const inside: boolean = distanceMeters <= area.radiusMeters;
+  // For polygons distanceMeters remains distance to the reference point, not a radius test.
+  const inside: boolean = polygon === null
+    ? distanceMeters <= area.radiusMeters!
+    : pointInPolygon(validated, polygon);
   return {
     status: inside ? "inside" : "outside",
     accessAllowed: inside,
