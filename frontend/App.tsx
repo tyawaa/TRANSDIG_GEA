@@ -22,11 +22,8 @@ import { useVisitSession } from "./src/hooks/useVisitSession";
 import { useAuthRefresh } from "./src/hooks/useAuthRefresh";
 import { useOperation } from "./src/hooks/useOperation";
 import { mockPoiSummaries, mockPoiToken } from "./src/mocks/stories";
-import {
-  emptyProgress,
-  PoiDetailScreen,
-  type PoiProgress,
-} from "./src/screens/PoiDetailScreen";
+import { StoryFlow } from "./src/features/stories/hifi/StoryFlow";
+import { emptyProgress, type PoiProgress } from "./src/features/stories/progress";
 import { GeaApi } from "./src/services/api";
 import {
   ApiStoriesSource,
@@ -125,6 +122,30 @@ function Home(): ReactElement {
     );
   }
 
+  // E5: alur Story hi-fi tampil layar penuh.
+  if (pois !== null && detailPoiId !== null && activeVisit !== null) {
+    const list: readonly PoiSummary[] = pois;
+    return (
+      <>
+        <StatusBar style="dark" />
+        <StoryFlow
+          key={detailPoiId}
+          source={storiesSource}
+          visit={activeVisit}
+          poiId={detailPoiId}
+          progressOf={(poiId: string): PoiProgress => progress[poiId] ?? emptyProgress}
+          onProgress={updateProgress}
+          allCompleted={(justCompleted: string): boolean =>
+            list.every((poi: PoiSummary): boolean =>
+              poi.id_poi === justCompleted || progress[poi.id_poi]?.completed === true
+            )}
+          dummyTokenFor={dummyTokenFor}
+          onExit={(): void => setDetailPoiId(null)}
+        />
+      </>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar style="dark" />
@@ -176,19 +197,6 @@ function Home(): ReactElement {
                 </Pressable>
               )}
             </>
-          )
-          : detailPoiId !== null && activeVisit !== null
-          ? (
-            <PoiDetailScreen
-              source={storiesSource}
-              visit={activeVisit}
-              poiId={detailPoiId}
-              progress={progress[detailPoiId] ?? emptyProgress}
-              onProgress={(patch: Partial<PoiProgress>): void =>
-                updateProgress(detailPoiId, patch)}
-              onBack={(): void => setDetailPoiId(null)}
-              dummyToken={dummyTokenFor(detailPoiId)}
-            />
           )
           : (
             <PoiListScreen

@@ -25,6 +25,9 @@ export function imageSource(url: string): ImageSourcePropType {
   return mockFile(url) ?? { uri: url };
 }
 
-export function audioSource(url: string): number | { readonly uri: string } {
+/** Sumber media untuk expo-audio dan expo-image: file dummy atau URL. */
+export function mediaSource(url: string): number | { readonly uri: string } {
   return mockFile(url) ?? { uri: url };
 }
+
+export const audioSource = mediaSource;

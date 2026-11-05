@@ -5,7 +5,7 @@ import { View } from "react-native";
 // Ilustrasi onboarding dari Figma (Hifi - Sprint 1, Onboarding #2–#4).
 // Semua koordinat dalam piksel frame 390 px, sama dengan Figma.
 
-type Layer = {
+export type Layer = {
   readonly src: number;
   readonly left: number;
   readonly top: number;

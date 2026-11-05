@@ -90,6 +90,9 @@ export const componentColors = {
   // Onboarding: teks isi dan latar layar "Selamat Datang".
   bodyDark: "#1C1917",
   welcomeBackground: "#FFFADB",
+  // Story: status QR gagal dan teks putih di atasnya.
+  qrFailed: "#CA0000",
+  textWhite: "#FFFFFF",
   toastDangerBackground: "#FFDBDE",
   toastSuccessBackground: "#E5FFE3",
   // Latar tombol outline saat ditekan (warna tombol dengan opasitas 25%).

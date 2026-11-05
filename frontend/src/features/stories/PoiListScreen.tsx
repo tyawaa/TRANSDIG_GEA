@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import { Pressable, Text, View } from "react-native";
 import type { PoiSummary } from "../../domain/contracts";
-import { emptyProgress, type PoiProgress } from "../../screens/PoiDetailScreen";
+import { emptyProgress, type PoiProgress } from "./progress";
 import { styles } from "../../theme/styles";
 import { PoiCard } from "./PoiCard";
 
