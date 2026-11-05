@@ -1,5 +1,6 @@
 import { ApiError } from "./errors.ts";
 import { type MuseumArea, validateCoordinate } from "./geofence.ts";
+import { parsePolygon } from "./polygon.ts";
 import { uuid } from "./validation.ts";
 
 export type Environment = { readonly [key: string]: string | undefined };
@@ -20,6 +21,27 @@ function required(environment: Environment, key: string): string {
 }
 
 export function museumAreaFromEnvironment(environment: Environment): MuseumArea | null {
+  const polygonJson = environment.GEA_MUSEUM_POLYGON_JSON?.trim();
+  if (polygonJson) {
+    try {
+      const polygon = parsePolygon(JSON.parse(polygonJson));
+      const reference = validateCoordinate({
+        latitude: Number(required(environment, "GEA_MUSEUM_LATITUDE")),
+        longitude: Number(required(environment, "GEA_MUSEUM_LONGITUDE")),
+      });
+      return {
+        ...reference,
+        polygon,
+        zoneId: uuid(required(environment, "GEA_MUSEUM_ZONE_ID"), "GEA_MUSEUM_ZONE_ID"),
+      };
+    } catch {
+      throw new ApiError(
+        503,
+        "MUSEUM_CONFIGURATION_INVALID",
+        "Periksa JSON poligon, titik referensi, dan UUID zona museum. Tidak beralih ke lingkaran.",
+      );
+    }
+  }
   const keys: readonly string[] = [
     "GEA_MUSEUM_LATITUDE",
     "GEA_MUSEUM_LONGITUDE",
