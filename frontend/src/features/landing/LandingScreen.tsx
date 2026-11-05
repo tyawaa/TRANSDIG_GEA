@@ -9,6 +9,7 @@ import type {
 import type { BusyOperation } from "../../hooks/useOperation";
 import { colors } from "../../theme/colors";
 import { styles } from "../../theme/styles";
+import type { LocationSettingsAction } from "../../hooks/useVisitSession";
 
 type LandingScreenProps = {
   readonly visit: Visit | null;
@@ -17,6 +18,8 @@ type LandingScreenProps = {
   readonly decision: AccessDecision | null;
   readonly error: string | null;
   readonly connection: string;
+  readonly locationLabel: string;
+  readonly locationSettingsAction: LocationSettingsAction | null;
   readonly onPrimary: () => void;
   readonly onOpenScanner: () => void;
   readonly onCheckConnection: () => void;
@@ -29,6 +32,8 @@ export function LandingScreen(
     decision,
     error,
     connection,
+    locationLabel,
+    locationSettingsAction,
     onPrimary,
     onOpenScanner,
     onCheckConnection,
@@ -61,8 +66,8 @@ export function LandingScreen(
         <Text style={styles.eyebrow}>MULAI DARI SINI</Text>
         <Text style={styles.title}>Sudah sampai di museum?</Text>
         <Text style={styles.body}>
-          Periksa lokasi untuk memulai kunjungan. Kami hanya meminta lokasi saat
-          kamu menekan tombol di bawah.
+          Izinkan lokasi saat aplikasi digunakan untuk memastikan kamu berada di
+          area museum. Aktifkan GPS dan pilih lokasi akurat saat diminta.
         </Text>
       </View>
       <View style={styles.steps}>
@@ -77,6 +82,18 @@ export function LandingScreen(
         ))}
       </View>
       <StatusNotice notice={notice} decision={decision} error={error} />
+      {visit === null && locationSettingsAction !== null && (
+        <Pressable
+          accessibilityRole="button"
+          disabled={busy !== null}
+          style={[styles.secondary, busy !== null && styles.disabled]}
+          onPress={(): void => {
+            void locationSettingsAction.onPress();
+          }}
+        >
+          <Text style={styles.secondaryText}>{locationSettingsAction.label}</Text>
+        </Pressable>
+      )}
       <Pressable
         accessibilityRole="button"
         disabled={busy !== null}
@@ -88,7 +105,7 @@ export function LandingScreen(
         {busy !== null && <ActivityIndicator color={colors.white} />}
         <Text style={styles.primaryText}>
           {busy === "location"
-            ? "Memeriksa lokasi..."
+            ? locationLabel
             : busy === "qr"
             ? "Memeriksa QR..."
             : busy === "stories"
