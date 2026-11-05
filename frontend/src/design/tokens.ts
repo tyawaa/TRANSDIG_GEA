@@ -87,6 +87,9 @@ export const componentColors = {
   fieldLabel: "#000000",
   cardBody: "#000000",
   cardCaption: "#303030",
+  // Onboarding: teks isi dan latar layar "Selamat Datang".
+  bodyDark: "#1C1917",
+  welcomeBackground: "#FFFADB",
   toastDangerBackground: "#FFDBDE",
   toastSuccessBackground: "#E5FFE3",
   // Latar tombol outline saat ditekan (warna tombol dengan opasitas 25%).

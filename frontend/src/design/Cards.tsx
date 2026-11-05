@@ -11,21 +11,33 @@ type PoiCardProps = {
   readonly description: string;
   /** Chip hijau di samping judul, contoh "WAJIB". */
   readonly badge?: string;
-  /** Kotak di kanan kartu. Figma belum punya tampilan tercentang. */
-  readonly onPressAction?: () => void;
+  /** Ikon 32 px di kiri. Default: ikon lokasi. */
+  readonly icon?: number;
+  /** Kotak di kanan kartu. */
+  readonly onPressAction?: (() => void) | undefined;
   readonly actionLabel?: string;
+  /** Figma belum punya tampilan tercentang; sementara tanda ✓ hijau di dalam kotak. */
+  readonly checked?: boolean;
 };
 
-/** "Card 1" di Figma: ikon lokasi, judul Ellak, chip, deskripsi, dan kotak aksi. */
+/** "Card 1" di Figma: ikon, judul Ellak, chip, deskripsi, dan kotak aksi. */
 export function PoiCard(
-  { title, description, badge, onPressAction, actionLabel }: PoiCardProps,
+  {
+    title,
+    description,
+    badge,
+    icon,
+    onPressAction,
+    actionLabel,
+    checked = false,
+  }: PoiCardProps,
 ): ReactElement {
   return (
     <View style={styles.poiCard}>
       <View style={styles.poiHeader}>
         <Image
           accessible={false}
-          source={require("../../assets/design/location.svg")}
+          source={icon ?? require("../../assets/design/location.svg")}
           style={styles.location}
         />
         <View style={styles.poiContent}>
@@ -41,13 +53,20 @@ export function PoiCard(
         </View>
       </View>
       <Pressable
-        accessibilityRole="button"
+        accessibilityRole="checkbox"
         accessibilityLabel={actionLabel ?? title}
+        accessibilityState={{ checked }}
         disabled={onPressAction === undefined}
         hitSlop={10}
         onPress={onPressAction}
         style={styles.action}
-      />
+      >
+        {checked && (
+          <GeaText variant="bold16" color={colors.secondaryGreen[900]} style={styles.check}>
+            ✓
+          </GeaText>
+        )}
+      </Pressable>
     </View>
   );
 }
@@ -107,7 +126,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondaryYellow[0],
     borderWidth: 2,
     borderColor: colors.primary[600],
+    alignItems: "center",
+    justifyContent: "center",
   },
+  check: { lineHeight: 18 },
   contentCard: {
     width: "100%",
     alignItems: "flex-end",

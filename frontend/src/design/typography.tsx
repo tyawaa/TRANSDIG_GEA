@@ -79,6 +79,7 @@ export function useFont(name: FontName): TextStyle {
 
 // Gaya teks yang benar-benar dipakai komponen di Figma.
 export const textStyles = {
+  display42: { font: "Ellak-Regular", fontSize: 42, lineHeight: 42 },
   heading20: { font: "Ellak-Regular", fontSize: 20 },
   heading24: { font: "Ellak-Regular", fontSize: 24 },
   heading28: { font: "Ellak-Regular", fontSize: 28, lineHeight: 34 },
